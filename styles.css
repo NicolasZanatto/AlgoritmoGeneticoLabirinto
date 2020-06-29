@@ -1,0 +1,33 @@
+.celula{
+	background: #fceb03;
+	width: 200px;
+    height: 40px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    color : #fff;	
+	border-style: solid;
+	border-top-color: #fceb03;
+    border-bottom-color: #fceb03;
+    border-left-color: #fceb03;
+    border-right-color: #fceb03;
+}
+.parede-cima{
+	border-top-color: #bd4242;
+}
+.parede-baixo{
+    border-bottom-color: #bd4242;
+}
+.parede-esquerda{
+    border-left-color: #bd4242;
+}
+.parede-direita{
+    border-right-color: #bd4242;
+}
+.container-align{
+	text-align: center;
+}
+.mapa{
+	margin-top:10px;
+}
+
