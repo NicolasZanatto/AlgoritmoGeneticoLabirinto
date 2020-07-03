@@ -37,14 +37,22 @@ var Populacao = function(tamPop, criarIndividuos){
 		}
 	}
 };
+
 //Indivíduos
 var Individuo = function(){
 	this.genes = [];
-	this.aptidao = 0;
+
+	var aptidaoSolucaoA = 0;
+	var aptidaoSolucaoB = 0;
 
 	for(var i=0; i<numGenes; i++) {
 		genes.push(Math.round(Math.random()));
+		if(solucao.A[i] == genes[i]) aptidaoSolucaoA++;
+		if(solucao.B[i] == genes[i]) aptidaoSolucaoB++;
 	}
+
+	this.aptidao = Math.max(aptidaoSolucaoA, aptidaoSolucaoB);
+	//Falta calcular se no caminho tem paredes ou se foi para fora do mapa
 }
 
 function NovaGeracao(populacao){
@@ -59,12 +67,18 @@ function NovaGeracao(populacao){
 	while(novaPopulacao.length < tamPop){
 		//seleciona os 2 pais por torneio
 		var pais = SelecaoTorneio(populacao);
-		var filhos = 
+		//var filhos = 
 	}
 }
 
 function SelecaoTorneio(populacao){
 	var populacaoIntermediaria = new Populacao(3, false);
+	//seleciona 3 indivíduos aleatóriamente na população
+	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
+	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
+	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
+
+	populacaoIntermediaria.Individuos.sort(function(a, b){return a.aptidao - b.aptidao});
 }
 
 
