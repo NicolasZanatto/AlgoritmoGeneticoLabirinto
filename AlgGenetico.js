@@ -67,8 +67,21 @@ function NovaGeracao(populacao){
 	while(novaPopulacao.length < tamPop){
 		//seleciona os 2 pais por torneio
 		var pais = SelecaoTorneio(populacao);
-		//var filhos = 
+		var filhos = []; 
+
+		//verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
+		if(Math.random() <= taxaCrossover)
+			filhos = Crossover(pais);
+		else
+			filhos.push(pais[0], pais[1]);
+
+		//adiciona os filhos na nova geração
+		novaPopulacao.push(filhos[0],filhos[1]);
 	}
+
+	//ordena a nova população
+	novaPopulacao.Individuos = OrdenarIndividuos(novaPopulacao.Individuos);
+	return novaPopulacao;
 }
 
 function SelecaoTorneio(populacao){
@@ -78,9 +91,14 @@ function SelecaoTorneio(populacao){
 	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
 	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
 
-	populacaoIntermediaria.Individuos.sort(function(a, b){return a.aptidao - b.aptidao});
+	populacaoIntermediaria.Individuos = OrdenarIndividuos(populacaoIntermediaria.Individuos)
+
+	return populacaoIntermediaria.slice(0,2);
 }
 
+function OrdenarIndividuos(individuos){
+	return individuos.sort(function(a, b){return a.aptidao - b.aptidao});
+}
 
 var Main = function(){
 	AlgoritmoGenetico();
