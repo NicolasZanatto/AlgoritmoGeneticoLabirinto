@@ -5,9 +5,6 @@ var AlgoritmoGenetico = function(){
 	//01 - norte
 	//10 - oeste
 	//11 - sul
-
-	var solucao = {A: [0,0,0,0,0,1,0,1,0,1,0,0], 
-				   B: [0,1,0,1,0,1,0,0,0,0,0,0]};
    	var taxaCrossover = 0.6;
    	var taxaMutacao = 0.3;
    	var elitismo = true;
@@ -58,14 +55,30 @@ function NovaGeracao(populacao){
 	//insere novos indivíduos na nova população, até atingir o tamanho máximo
 	while(novaPopulacao.length < tamPop){
 		//seleciona os 2 pais por torneio
-		var pais = SelecaoTorneio(populacao);
-		var filhos = 
+		var pais = SelecaoTorneio(populacao); 
 	}
 }
 
 function SelecaoTorneio(populacao){
 	var populacaoIntermediaria = new Populacao(3, false);
 }
+
+function crossOver(  individuos1 ,  individuos2 ){
+	//passar por parametro futuramente
+	var pontoDeCorte =3;
+
+	var genePai1 = individuos1.genes;
+	var genePai2 = individuos2.genes;
+
+	var geneFilho1=[];
+	var geneFilho2=[];
+	
+	geneFilho1 = genePai1.slice(0,pontoDeCorte).concat(genePai2.slice(pontoDeCorte));
+	
+	geneFilho2 = genePai2.slice(0,pontoDeCorte).concat(genePai1.slice(pontoDeCorte));
+
+}
+
 
 
 var Main = function(){
