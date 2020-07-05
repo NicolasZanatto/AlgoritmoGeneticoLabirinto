@@ -100,6 +100,8 @@ function crossOver(  individuos1 ,  individuos2 ){
 	var genePai1 = individuos1.genes;
 	var genePai2 = individuos2.genes;
 
+	var filhos = new Individuo();
+
 	var geneFilho1=[];
 	var geneFilho2=[];
 	
@@ -107,6 +109,10 @@ function crossOver(  individuos1 ,  individuos2 ){
 	
 	geneFilho2 = genePai2.slice(0,pontoDeCorte).concat(genePai1.slice(pontoDeCorte));
 
+	filhos[0] = Individuo(geneFilho1);
+	filhos[1] = Individuo(geneFilho2);
+
+	return filhos;
 }
 
 function OrdenarIndividuos(individuos){
