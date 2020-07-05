@@ -5,6 +5,9 @@ var AlgoritmoGenetico = function(){
 	//01 - norte
 	//10 - oeste
 	//11 - sul
+
+	var solucao = {A: [0,0,0,0,0,1,0,1,0,1,0,0], 
+				   B: [0,1,0,1,0,1,0,0,0,0,0,0]};
    	var taxaCrossover = 0.6;
    	var taxaMutacao = 0.3;
    	var elitismo = true;
@@ -13,67 +16,64 @@ var AlgoritmoGenetico = function(){
 	var numGenes = solucao.A.length;
 	console.log(solucao);
 
-	var populacao = new Populacao(tamPop, true);
+	var populacao = new Populacao(tamPop,numGenes, true);
 	var temSolucao = false;
 	var geracao = 0;
 
 	while(!temSolucao && geracao < numMaxGeracoes){		
 		geracao++;
-		//TODO: resto
+		
+		//cria nova populacao
+        populacao = NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover);
+        console.log(`Geração ${geracao} aptidao ${populacao.Individuos[0].aptidao} Melhor: ${populacao.Individuos[0].genes}`); 
 	}
 
 };
 
 
-var Populacao = function(tamPop, criarIndividuos){
+var Populacao = function(tamPop, numGenes, criarIndividuos){
 	this.Individuos = [];
 
 	if(criarIndividuos){
 		for(var i=0; i<tamPop; i++) {
-			individuos.push(new Individuo());
+			this.Individuos.push(new Individuo(numGenes));
 		}
 	}
 };
 
 //Indivíduos
-var Individuo = function(){
+var Individuo = function(numGenes){
 	this.genes = [];
 
-	var aptidaoSolucaoA = 0;
-	var aptidaoSolucaoB = 0;
-
 	for(var i=0; i<numGenes; i++) {
-		genes.push(Math.round(Math.random()));
-		if(solucao.A[i] == genes[i]) aptidaoSolucaoA++;
-		if(solucao.B[i] == genes[i]) aptidaoSolucaoB++;
+		this.genes.push(Math.round(Math.random()));
 	}
 
-	this.aptidao = Math.max(aptidaoSolucaoA, aptidaoSolucaoB);
-	//Falta calcular se no caminho tem paredes ou se foi para fora do mapa
+	this.aptidao = CalcularAptidao(this.genes);
 }
 
-function NovaGeracao(populacao){
+function NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover){
 	//nova população do mesmo tamanho da antiga
-	var novaPopulacao = new Populacao(tamPop, false);
+	var novaPopulacao = new Populacao(tamPop, numGenes, false);
 
 	//se tiver elitismo, mantém o melhor indivíduo da geração atual
 	if(elitismo)
-		novaPopulacao.Individuos.push(Populacao.individuos[0]);
+		novaPopulacao.Individuos.push(populacao.Individuos[0]);
 
 	//insere novos indivíduos na nova população, até atingir o tamanho máximo
-	while(novaPopulacao.length < tamPop){
+	while(novaPopulacao.Individuos.length < tamPop){
 		//seleciona os 2 pais por torneio
-		var pais = SelecaoTorneio(populacao); 
+		var pais = SelecaoTorneio(populacao, tamPop, numGenes);
 		var filhos = []; 
 
 		//verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
 		if(Math.random() <= taxaCrossover)
-			filhos = Crossover(pais);
+			filhos = CrossOver(pais);
 		else
 			filhos.push(pais[0], pais[1]);
 
 		//adiciona os filhos na nova geração
-		novaPopulacao.push(filhos[0],filhos[1]);
+		novaPopulacao.Individuos.push(filhos[0],filhos[1]);
 	}
 
 	//ordena a nova população
@@ -81,8 +81,8 @@ function NovaGeracao(populacao){
 	return novaPopulacao;
 }
 
-function SelecaoTorneio(populacao){
-	var populacaoIntermediaria = new Populacao(3, false);
+function SelecaoTorneio(populacao, tamPop, numGenes){
+	var populacaoIntermediaria = new Populacao(3,numGenes, false);
 	//seleciona 3 indivíduos aleatóriamente na população
 	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
 	populacaoIntermediaria.Individuos.push(populacao.Individuos[Math.floor(Math.random() * tamPop)]);
@@ -90,10 +90,10 @@ function SelecaoTorneio(populacao){
 
 	populacaoIntermediaria.Individuos = OrdenarIndividuos(populacaoIntermediaria.Individuos)
 
-	return populacaoIntermediaria.slice(0,2);
+	return populacaoIntermediaria.Individuos.slice(0,2);
 }
 
-function crossOver(  individuos1 ,  individuos2 ){
+function CrossOver(  individuos1 ,  individuos2 ){
 	//passar por parametro futuramente
 	var pontoDeCorte =3;
 
@@ -117,6 +117,84 @@ function crossOver(  individuos1 ,  individuos2 ){
 
 function OrdenarIndividuos(individuos){
 	return individuos.sort(function(a, b){return a.aptidao - b.aptidao});
+}
+
+function CalcularAptidao(genes){
+	var posicaoInicial = 1;
+	var posicaoFinal = 16
+	var aptidao = 0;
+
+	for(var i=0;i<genes.length;i+=2){
+		var coordenada = genes.slice(i,i+2);
+
+		if(SaiuDoMapa(posicaoInicial, coordenada)){
+			aptidao+=50;
+			return aptidao;
+		}
+		if(AtravessouParede(posicaoInicial, coordenada)){
+			aptidao+= 20
+		}
+
+		posicaoInicial = MudarPosicaoMapa(posicaoInicial, coordenada);
+	}
+	if(posicaoInicial != posicaoFinal)
+		aptidao+=10;
+
+	return aptidao;
+
+}
+
+function SaiuDoMapa(posicaoMapa,coordenada){
+
+	if([1,2,3,4].includes(posicaoMapa) && CoordenadaSul(coordenada))
+		return true;
+	if([1,5,9,13].includes(posicaoMapa) && CoordenadaOeste(coordenada))
+		return true;
+	if([13,14,15,16].includes(posicaoMapa) && CoordenadaNorte(coordenada))
+		return true;
+	if([4,8,12].includes(posicaoMapa) && CoordenadaLeste(coordenada))
+		return true;
+}
+
+function AtravessouParede(posicaoMapa,coordenada){
+
+	if([6,12,14].includes(posicaoMapa) && CoordenadaSul(coordenada))
+		return true;
+	if([7,8,11].includes(posicaoMapa) && CoordenadaOeste(coordenada))
+		return true;
+	if([2,8,10].includes(posicaoMapa) && CoordenadaNorte(coordenada))
+		return true;
+	if([6,10].includes(posicaoMapa) && CoordenadaLeste(coordenada))
+		return true;
+}
+
+function MudarPosicaoMapa(posicaoMapa,coordenada){
+
+	if(CoordenadaSul(coordenada))
+		return posicaoMapa - 4;
+	if(CoordenadaOeste(coordenada))
+		return posicaoMapa - 1;
+	if(CoordenadaNorte(coordenada))
+		return posicaoMapa + 4;
+	if(CoordenadaLeste(coordenada))
+		return posicaoMapa + 1;
+}
+
+function CoordenadaSul(coordenada){
+	var sul = [1,1];
+	return coordenada[0] == sul[0] && coordenada[1] == sul[1];
+}
+function CoordenadaOeste(coordenada){
+	var oeste = [1,0];
+	return coordenada[0] == oeste[0] && coordenada[1] == oeste[1];
+}
+function CoordenadaNorte(coordenada){
+	var norte = [0,1];
+	return coordenada[0] == norte[0] && coordenada[1] == norte[1];
+}
+function CoordenadaLeste(coordenada){
+	var leste = [0,0];
+	return coordenada[0] == leste[0] && coordenada[1] == leste[1];
 }
 
 var Main = function(){
