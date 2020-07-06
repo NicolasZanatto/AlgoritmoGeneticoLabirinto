@@ -12,6 +12,34 @@
     border-left-color: #fceb03;
     border-right-color: #fceb03;
 }
+.celula-vermelha{
+	background: #f15952;
+	width: 200px;
+    height: 40px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    color : #fff;	
+	border-style: solid;
+	border-top-color: #f15952;
+    border-bottom-color: #f15952;
+    border-left-color: #f15952;
+    border-right-color: #f15952;
+}
+.celula-verde{
+	background: #9ef152;
+	width: 200px;
+    height: 40px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    color : #fff;	
+	border-style: solid;
+	border-top-color: #9ef152;
+    border-bottom-color: #9ef152;
+    border-left-color: #9ef152;
+    border-right-color: #9ef152;
+}
 .parede-cima{
 	border-top-color: #bd4242;
 }
@@ -24,10 +52,23 @@
 .parede-direita{
     border-right-color: #bd4242;
 }
+.parede-cima-verde{
+	border-top-color: #9ef152;
+}
+.parede-baixo-verde{
+    border-bottom-color: #9ef152;
+}
+.parede-esquerda-verde{
+    border-left-color: #9ef152;
+}
+.parede-direita-verde{
+    border-right-color: #9ef152;
+}
 .container-align{
 	text-align: center;
 }
 .mapa{
 	margin-top:10px;
 }
+
 
