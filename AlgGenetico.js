@@ -25,7 +25,7 @@ var AlgoritmoGenetico = function(){
 		
 		//cria nova populacao
         populacao = NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover);
-        console.log(`Geração ${geracao} aptidao ${populacao.Individuos[0].aptidao} Melhor: ${populacao.Individuos[0].genes}`); 
+        MostrarCaminhoIndividuoNaTela(populacao.Individuos[0]);
 	}
 
 };
@@ -67,9 +67,9 @@ function NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover){
 		var filhos = []; 
 
 		//verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
-		if(Math.random() <= taxaCrossover)
-			filhos = CrossOver(pais);
-		else
+		//if(Math.random() <= taxaCrossover)
+		//	filhos = CrossOver(pais);
+		//else
 			filhos.push(pais[0], pais[1]);
 
 		//adiciona os filhos na nova geração
@@ -195,6 +195,39 @@ function CoordenadaNorte(coordenada){
 function CoordenadaLeste(coordenada){
 	var leste = [0,0];
 	return coordenada[0] == leste[0] && coordenada[1] == leste[1];
+}
+
+function MostrarCaminhoIndividuoNaTela(individuo){
+	var cont = 0;
+	var posicaoMapa = 1;
+
+	for(var i=0;i<individuo.genes.length;i+=2){
+		setInterval(function(){
+			//var coordenada = individuo.genes.slice(i,i+2);
+			//posicaoMapa = MudarPosicaoMapa(coordenada);
+			MarcarPosicaoMapa(2);
+		},0.0000001)
+	}
+}
+
+function MarcarPosicaoMapa(posicaoMapa){
+	$(`#C${posicaoMapa}`).css('background','#9ef152');
+	$(`#C${posicaoMapa}`).addClass('parede-cima-verde');
+	$(`#C${posicaoMapa}`).addClass('parede-baixo-verde');
+	$(`#C${posicaoMapa}`).addClass('parede-esquerda-verde');
+	$(`#C${posicaoMapa}`).addClass('parede-direita-verde');
+
+	if([1,2,3,4,6,12,14].includes(posicaoMapa))
+		$(`#C${posicaoMapa}`).addClass('parede-baixo');
+
+	if([5,8,9,13].includes(posicaoMapa))
+		$(`#C${posicaoMapa}`).addClass('parede-esquerda');
+
+	if([8,10,13,14,15,16].includes(posicaoMapa))
+		$(`#C${posicaoMapa}`).addClass('parede-cima');
+	
+	if([4,6,8,10,12].includes(posicaoMapa))
+		$(`#C${posicaoMapa}`).addClass('parede-direita');
 }
 
 var Main = function(){
