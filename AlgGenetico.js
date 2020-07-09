@@ -8,26 +8,28 @@ var AlgoritmoGenetico = function(){
 
 	var solucao = {A: [0,0,0,0,0,1,0,1,0,1,0,0], 
 				   B: [0,1,0,1,0,1,0,0,0,0,0,0]};
-   	var taxaCrossover = 0.6;
-   	var taxaMutacao = 0.3;
-   	var elitismo = true;
-   	var tamPop = 100;
-   	var numMaxGeracoes = 10000;
+   	var taxaCrossover = parseFloat($('#taxaCrossover').val())
+   	var elitismo = $('#elitismo').is(":checked");
+   	var tamPop = $('#tamanhoPopulacao').val();
+   	var numMaxGeracoes = $('#numeroGeracoes').val();
 	var numGenes = solucao.A.length;
 	console.log(solucao);
 
 	var populacao = new Populacao(tamPop,numGenes, true);
 	var temSolucao = false;
 	var geracao = 0;
+	var listaMelhoresIndividuos = [];
 
 	while(!temSolucao && geracao < numMaxGeracoes){		
 		geracao++;
 		
 		//cria nova populacao
         populacao = NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover);
-        MostrarCaminhoIndividuoNaTela(populacao.Individuos[0]);
+        listaMelhoresIndividuos.push(populacao.Individuos[0]);
 	}
 
+	console.log(listaMelhoresIndividuos);
+	MostrarCaminhoIndividuoNaTela(listaMelhoresIndividuos);
 };
 
 
@@ -36,20 +38,33 @@ var Populacao = function(tamPop, numGenes, criarIndividuos){
 
 	if(criarIndividuos){
 		for(var i=0; i<tamPop; i++) {
-			this.Individuos.push(new Individuo(numGenes));
+			this.Individuos.push(new Individuo(numGenes, null));
 		}
 	}
 };
 
 //Indivíduos
-var Individuo = function(numGenes){
+var Individuo = function(numGenes, genes){
 	this.genes = [];
-
-	for(var i=0; i<numGenes; i++) {
-		this.genes.push(Math.round(Math.random()));
+	if(genes == null){
+		for(var i=0; i<numGenes; i++) {
+			this.genes.push(Math.round(Math.random()));
+		}
+	}
+	else{
+		this.genes = genes;
+		var taxaMutacao = parseFloat($('#taxaMutacao').val());
+		if (Math.random() <= taxaMutacao) {
+			var posicao = Math.floor(Math.random() * genes.length);
+			this.genes[posicao] = trocaDigito(this.genes[posicao], 1);
+		}
 	}
 
 	this.aptidao = CalcularAptidao(this.genes);
+}
+
+function trocaDigito(v, digits) {
+    return ~v & (Math.pow(2, digits) - 1);
 }
 
 function NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover){
@@ -67,9 +82,9 @@ function NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover){
 		var filhos = []; 
 
 		//verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
-		//if(Math.random() <= taxaCrossover)
-		//	filhos = CrossOver(pais);
-		//else
+		if(Math.random() <= taxaCrossover)
+			filhos = CrossOver(pais);
+		else
 			filhos.push(pais[0], pais[1]);
 
 		//adiciona os filhos na nova geração
@@ -93,24 +108,20 @@ function SelecaoTorneio(populacao, tamPop, numGenes){
 	return populacaoIntermediaria.Individuos.slice(0,2);
 }
 
-function CrossOver(  individuos1 ,  individuos2 ){
+function CrossOver(Individuos){
 	//passar por parametro futuramente
 	var pontoDeCorte =3;
 
-	var genePai1 = individuos1.genes;
-	var genePai2 = individuos2.genes;
+	var genePai1 = Individuos[0].genes; 
+	var genePai2 = Individuos[1].genes;
 
-	var filhos = new Individuo();
-
-	var geneFilho1=[];
-	var geneFilho2=[];
+	var filhos = [];
 	
-	geneFilho1 = genePai1.slice(0,pontoDeCorte).concat(genePai2.slice(pontoDeCorte));
+	var geneFilho1 = genePai1.slice(0,pontoDeCorte).concat(genePai2.slice(pontoDeCorte));
 	
-	geneFilho2 = genePai2.slice(0,pontoDeCorte).concat(genePai1.slice(pontoDeCorte));
+	var geneFilho2 = genePai2.slice(0,pontoDeCorte).concat(genePai1.slice(pontoDeCorte));
 
-	filhos[0] = Individuo(geneFilho1);
-	filhos[1] = Individuo(geneFilho2);
+	filhos.push(new Individuo(0, geneFilho1), new Individuo(0, geneFilho2));
 
 	return filhos;
 }
@@ -197,39 +208,59 @@ function CoordenadaLeste(coordenada){
 	return coordenada[0] == leste[0] && coordenada[1] == leste[1];
 }
 
-function MostrarCaminhoIndividuoNaTela(individuo){
-	var cont = 0;
-	var posicaoMapa = 1;
+function MostrarCaminhoIndividuoNaTela(individuos){
+	var posicaoMapa = 1;	
+	
+    for (var i =0; i < individuos.length; i++) {
+  		for (var j=0;j<individuos[i].genes.length;j+=2) {
 
-	for(var i=0;i<individuo.genes.length;i+=2){
-		setInterval(function(){
-			//var coordenada = individuo.genes.slice(i,i+2);
-			//posicaoMapa = MudarPosicaoMapa(coordenada);
-			MarcarPosicaoMapa(2);
-		},0.0000001)
+	    	delayed(100, function (i, j) {
+		      	return function () {
+		        	var coordenada = individuos[i].genes.slice(j,j+2);
+					console.log(individuos[i].genes.slice(j,j+2));
+					posicaoMapa = MudarPosicaoMapa(posicaoMapa, coordenada);
+					MarcarPosicaoMapa(posicaoMapa);
+					if(j == 10){
+						posicaoMapa = 1;
+					}
+		      	};
+	    	}(i, j));
+	  	}
 	}
+
+	LimparMapa();
 }
 
 function MarcarPosicaoMapa(posicaoMapa){
-	$(`#C${posicaoMapa}`).css('background','#9ef152');
-	$(`#C${posicaoMapa}`).addClass('parede-cima-verde');
-	$(`#C${posicaoMapa}`).addClass('parede-baixo-verde');
-	$(`#C${posicaoMapa}`).addClass('parede-esquerda-verde');
-	$(`#C${posicaoMapa}`).addClass('parede-direita-verde');
-
-	if([1,2,3,4,6,12,14].includes(posicaoMapa))
-		$(`#C${posicaoMapa}`).addClass('parede-baixo');
-
-	if([5,8,9,13].includes(posicaoMapa))
-		$(`#C${posicaoMapa}`).addClass('parede-esquerda');
-
-	if([8,10,13,14,15,16].includes(posicaoMapa))
-		$(`#C${posicaoMapa}`).addClass('parede-cima');
-	
-	if([4,6,8,10,12].includes(posicaoMapa))
-		$(`#C${posicaoMapa}`).addClass('parede-direita');
+	LimparMapa();
+	$(`#C${posicaoMapa}`).addClass('celula-verde');
 }
 
+function LimparMapa(){
+	$("#mapa h1").removeClass("celula-verde");
+}
+
+var delayed = (function () {
+  var queue = [];
+
+  function processQueue() {
+    if (queue.length > 0) {
+      setTimeout(function () {
+        queue.shift().cb();
+        processQueue();
+      }, queue[0].delay);
+    }
+  }
+
+  return function delayed(delay, cb) {
+    queue.push({ delay: delay, cb: cb });
+
+    if (queue.length === 1) {
+      processQueue();
+    }
+  };
+}());	
+
 var Main = function(){
-	AlgoritmoGenetico();
+	
 }();

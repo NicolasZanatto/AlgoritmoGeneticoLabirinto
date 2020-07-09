@@ -8,9 +8,48 @@
 </head>
 <body>
 	<div class="container">
-		<div class="row col-md-12 container-align">
+		<div class="row col-md-12">
 			<h1><span class="text-center">Inteligência Artificial - Algoritmo Genético.</span></h1>
-			<div class="row col-md-10 col-md-offset-1 mapa">
+			<div class="col-md-4">
+				<form>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Número de Gerações</label>
+				    <input type="text" class="form-control" id="numeroGeracoes" aria-describedby="emailHelp" placeholder="Digite o número de gerações">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">Tamanho da População</label>
+				    <input type="text" class="form-control" id="tamanhoPopulacao" placeholder="Digite o tamanho da População">
+				  </div>
+				  <div class="form-group form-check">
+				    <input type="checkbox" class="form-check-input" id="elitismo">
+				    <label class="form-check-label" for="elitismo">Elitismo</label>
+				  </div>
+				  <button type="submit" class="btn btn-success">Iniciar</button>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<form>
+					<div class="form-group">
+					    <label for="exampleInputPassword1">Taxa de Crossover</label>
+					    <input type="text" class="form-control" id="taxaCrossover" placeholder="Digite a taxa de crossover">
+				    </div>
+				    <div class="form-group">
+				    	<label for="exampleInputPassword1">Taxa de Mutação</label>
+				    	<input type="text" class="form-control" id="taxaMutacao" placeholder="Digite a taxa de mutação">
+				    </div>
+				    <div class="form-group">
+					    <label>Geração:</label>
+					    <label id="geracao">111</label>
+				    </div>
+				    <div class="form-group">
+					    <label for="exampleInputPassword1">Aptidão:</label>
+					    <label id="aptidao"></label>
+				    </div>
+				</form>
+			</div>
+		</div>
+		<div class="row col-md-12 container-align">
+			<div id= "mapa" class="row col-md-10 col-md-offset-1 mapa">
 				<h1 id="C13" class="text-center celula parede-cima parede-esquerda">13</h1>
 				<h1 id="C14" class="text-center celula parede-cima">14</h1>
 				<h1 id="C15" class="text-center celula parede-cima">15</h1>
@@ -28,12 +67,13 @@
 				<h1 id="C8" class="text-center celula parede-esquerda parede-cima parede-direita">8</h1>
 			
 			
-				<h1 id="C1" class="text-center celula-verde parede-baixo">1</h1>
+				<h1 id="C1" class="text-center celula celula-verde parede-baixo">1</h1>
 				<h1 id="C2" class="text-center celula parede-baixo">2</h1>
 				<h1 id="C3" class="text-center celula parede-baixo">3</h1>
 				<h1 id="C4" class="text-center celula parede-baixo parede-direita">4</h1>
 			</div>
 		</div>
+		
 	</div>
 	<script src="AlgGenetico.js"></script>
 </body>

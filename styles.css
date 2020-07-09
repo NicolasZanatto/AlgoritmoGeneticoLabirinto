@@ -28,17 +28,6 @@
 }
 .celula-verde{
 	background: #9ef152;
-	width: 200px;
-    height: 40px;
-    display: inline-block;
-    margin: 0;
-    vertical-align: top;
-    color : #fff;	
-	border-style: solid;
-	border-top-color: #9ef152;
-    border-bottom-color: #9ef152;
-    border-left-color: #9ef152;
-    border-right-color: #9ef152;
 }
 .parede-cima{
 	border-top-color: #bd4242;
