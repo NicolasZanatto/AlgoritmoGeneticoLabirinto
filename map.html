@@ -14,32 +14,32 @@
 				<form>
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Número de Gerações</label>
-				    <input type="text" class="form-control" id="numeroGeracoes" aria-describedby="emailHelp" placeholder="Digite o número de gerações">
+				    <input type="text" class="form-control" id="numeroGeracoes" aria-describedby="emailHelp" placeholder="Digite o número de gerações" value="10000">
 				  </div>
 				  <div class="form-group">
 				    <label for="exampleInputPassword1">Tamanho da População</label>
-				    <input type="text" class="form-control" id="tamanhoPopulacao" placeholder="Digite o tamanho da População">
+				    <input type="text" class="form-control" id="tamanhoPopulacao" placeholder="Digite o tamanho da População" value="100">
 				  </div>
 				  <div class="form-group form-check">
-				    <input type="checkbox" class="form-check-input" id="elitismo">
+				    <input type="checkbox" class="form-check-input" id="elitismo" checked>
 				    <label class="form-check-label" for="elitismo">Elitismo</label>
 				  </div>
-				  <button type="submit" class="btn btn-success">Iniciar</button>
+				  <button id="iniciar" type="submit" class="btn btn-success">Iniciar</button>
 				</form>
 			</div>
 			<div class="col-md-4">
 				<form>
 					<div class="form-group">
 					    <label for="exampleInputPassword1">Taxa de Crossover</label>
-					    <input type="text" class="form-control" id="taxaCrossover" placeholder="Digite a taxa de crossover">
+					    <input type="text" class="form-control" id="taxaCrossover" placeholder="Digite a taxa de crossover" value="0.7">
 				    </div>
 				    <div class="form-group">
 				    	<label for="exampleInputPassword1">Taxa de Mutação</label>
-				    	<input type="text" class="form-control" id="taxaMutacao" placeholder="Digite a taxa de mutação">
+				    	<input type="text" class="form-control" id="taxaMutacao" placeholder="Digite a taxa de mutação" value="0.3">
 				    </div>
 				    <div class="form-group">
 					    <label>Geração:</label>
-					    <label id="geracao">111</label>
+					    <label id="geracao"></label>
 				    </div>
 				    <div class="form-group">
 					    <label for="exampleInputPassword1">Aptidão:</label>

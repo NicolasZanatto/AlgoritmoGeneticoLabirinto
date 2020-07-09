@@ -26,6 +26,8 @@ var AlgoritmoGenetico = function(){
 		//cria nova populacao
         populacao = NovaGeracao(populacao, tamPop, numGenes, elitismo, taxaCrossover);
         listaMelhoresIndividuos.push(populacao.Individuos[0]);
+        if(AchouSolucao(populacao.Individuos[0]))
+        	temSolucao = true;
 	}
 
 	console.log(listaMelhoresIndividuos);
@@ -61,6 +63,10 @@ var Individuo = function(numGenes, genes){
 	}
 
 	this.aptidao = CalcularAptidao(this.genes);
+}
+
+function AchouSolucao(individuo){
+	return individuo.aptidao == 0;
 }
 
 function trocaDigito(v, digits) {
@@ -217,9 +223,8 @@ function MostrarCaminhoIndividuoNaTela(individuos){
 	    	delayed(100, function (i, j) {
 		      	return function () {
 		        	var coordenada = individuos[i].genes.slice(j,j+2);
-					console.log(individuos[i].genes.slice(j,j+2));
 					posicaoMapa = MudarPosicaoMapa(posicaoMapa, coordenada);
-					MarcarPosicaoMapa(posicaoMapa);
+					MarcarDadosMapa(posicaoMapa, i, individuos[i]);
 					if(j == 10){
 						posicaoMapa = 1;
 					}
@@ -231,13 +236,18 @@ function MostrarCaminhoIndividuoNaTela(individuos){
 	LimparMapa();
 }
 
-function MarcarPosicaoMapa(posicaoMapa){
+function MarcarDadosMapa(posicaoMapa, geracao, individuo){
 	LimparMapa();
 	$(`#C${posicaoMapa}`).addClass('celula-verde');
+
+	$('#geracao').text(geracao);
+	$('#aptidao').text(individuo.aptidao);
+
 }
 
 function LimparMapa(){
 	$("#mapa h1").removeClass("celula-verde");
+	$('#C1').addClass('celula-verde');
 }
 
 var delayed = (function () {
@@ -262,5 +272,5 @@ var delayed = (function () {
 }());	
 
 var Main = function(){
-	
+	$("#iniciar").on( "click", AlgoritmoGenetico);
 }();
