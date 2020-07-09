@@ -116,7 +116,7 @@ function SelecaoTorneio(populacao, tamPop, numGenes){
 
 function CrossOver(Individuos){
 	//passar por parametro futuramente
-	var pontoDeCorte =3;
+	var pontoDeCorte =5;
 
 	var genePai1 = Individuos[0].genes; 
 	var genePai2 = Individuos[1].genes;
