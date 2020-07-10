@@ -12,7 +12,7 @@ var AlgoritmoGenetico = function(){
    	var elitismo = $('#elitismo').is(":checked");
    	var tamPop = $('#tamanhoPopulacao').val();
    	var numMaxGeracoes = $('#numeroGeracoes').val();
-	var numGenes = solucao.A.length;
+	var numGenes = 12;
 	console.log(solucao);
 
 	var populacao = new Populacao(tamPop,numGenes, true);
@@ -29,7 +29,7 @@ var AlgoritmoGenetico = function(){
         if(AchouSolucao(populacao.Individuos[0]))
         	temSolucao = true;
 	}
-
+	
 	console.log(listaMelhoresIndividuos);
 	MostrarCaminhoIndividuoNaTela(listaMelhoresIndividuos);
 };
@@ -66,7 +66,7 @@ var Individuo = function(numGenes, genes){
 }
 
 function AchouSolucao(individuo){
-	return individuo.aptidao == 0;
+	return individuo.aptidao == 20;
 }
 
 function trocaDigito(v, digits) {
@@ -124,7 +124,6 @@ function CrossOver(Individuos){
 	var filhos = [];
 	
 	var geneFilho1 = genePai1.slice(0,pontoDeCorte).concat(genePai2.slice(pontoDeCorte));
-	
 	var geneFilho2 = genePai2.slice(0,pontoDeCorte).concat(genePai1.slice(pontoDeCorte));
 
 	filhos.push(new Individuo(0, geneFilho1), new Individuo(0, geneFilho2));
@@ -143,7 +142,6 @@ function CalcularAptidao(genes){
 
 	for(var i=0;i<genes.length;i+=2){
 		var coordenada = genes.slice(i,i+2);
-
 		if(SaiuDoMapa(posicaoInicial, coordenada)){
 			aptidao+=50;
 			return aptidao;
@@ -151,14 +149,26 @@ function CalcularAptidao(genes){
 		if(AtravessouParede(posicaoInicial, coordenada)){
 			aptidao+= 20
 		}
+		aptidao+= pontuacaoMapa(posicaoInicial);
 
 		posicaoInicial = MudarPosicaoMapa(posicaoInicial, coordenada);
 	}
 	if(posicaoInicial != posicaoFinal)
 		aptidao+=10;
-
+		
 	return aptidao;
 
+}
+function pontuacaoMapa (posicaoInicial){
+	if([1,2,3,4,5,9,13].includes(posicaoInicial)){
+		return 5;
+	}
+	if([6,7,8,10,14,].includes(posicaoInicial)){
+		return 3;
+	}
+	if([11,12,15].includes(posicaoInicial)){
+		return 1;
+	}
 }
 
 function SaiuDoMapa(posicaoMapa,coordenada){
